@@ -1,0 +1,12 @@
+name: Heliosphere Fix 2
+internal_name: HeliosphereFix2
+author: Neko Boi Nick
+punchline: On-demand font loading lags some people.
+description: Fixes the Heliosphere plugin by preloading all the required fonts.
+repo_url: https://github.com/thakyZ/HeliosphereFix
+applicable_version: any
+tags:
+  - Utility
+dalamud_api_level: 8
+icon_url: https://raw.githubusercontent.com/thakyZ/MyDalamudPlugins/main/plugins/HeliosphereFix/images/icon.png
+changelog: Initial release

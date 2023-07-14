@@ -1,0 +1,157 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <Company></Company>
+    <Authors>Neko Boi Nick</Authors>
+    <Description>
+      Allows any number of minions to be enabled for the minion roulette, instead of having to choose between the
+      "up to 30" and "EVERYTHING" modes supported by the game. Also has (or will have) an option to omit the
+      island sanctuary minions from being spawned.
+    </Description>
+    <PackageProjectUrl>https://github.com/thakyZ/BetterMinionRoulette-Dalamud</PackageProjectUrl>
+    <Copyright></Copyright>
+    <RootNamespace>NekoBoiNick.FFXIV.DalamudPlugin.$(MSBuildProjectName)</RootNamespace>
+    <Title>Better Minion Roulette</Title>
+  </PropertyGroup>
+
+  <PropertyGroup Label="Target">
+    <TargetFramework>net7.0-windows</TargetFramework>
+    <PlatformTarget>x64</PlatformTarget>
+    <Platforms>x64</Platforms>
+    <Configurations>Release;Debug</Configurations>
+    <Nullable>Enable</Nullable>
+    <LangVersion>Latest</LangVersion>
+    <GenerateDependencyFile>False</GenerateDependencyFile>
+    <EnforceCodeStyleInBuild>True</EnforceCodeStyleInBuild>
+  </PropertyGroup>
+
+  <PropertyGroup Label="Build">
+    <OutputType>Library</OutputType>
+    <AppendTargetFrameworkToOutputPath>False</AppendTargetFrameworkToOutputPath>
+    <DebugSymbols>True</DebugSymbols>
+    <DebugType>Full</DebugType>
+    <ProduceReferenceAssembly>False</ProduceReferenceAssembly>
+    <RestorePackagesWithLockFile>True</RestorePackagesWithLockFile>
+    <CopyLocalLockFileAssemblies>True</CopyLocalLockFileAssemblies>
+  </PropertyGroup>
+
+  <PropertyGroup Label="Feature">
+    <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
+    <Version>1.0.0.4</Version>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <AssemblyTitle>$(Title)</AssemblyTitle>
+    <AssemblyName>$(MSBuildProjectName)</AssemblyName>
+    <Product>$(Title)</Product>
+    <PluginVersion>$(Version)</PluginVersion>
+    <FileVersion>$(Version)</FileVersion>
+    <AssemblyVersion>$(Version)</AssemblyVersion>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)'=='Release'">
+    <AssemblyName>$(MSBuildProjectName)</AssemblyName>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>True</Optimize>
+    <OutputPath>$(ProjectDir)bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)'=='Debug'">
+    <AssemblyName>$(MSBuildProjectName)2</AssemblyName>
+    <Optimize>False</Optimize>
+    <OutputPath>$(AppData)\XIVLauncher\devPlugins\$(MSBuildProjectName)\</OutputPath>
+    <BaseOutputPath>$(AppData)\XIVLauncher\devPlugins\$(MSBuildProjectName)\</BaseOutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <GeneratePackageOnBuild>False</GeneratePackageOnBuild>
+    <AutoGenerateBindingRedirects>True</AutoGenerateBindingRedirects>
+    <DalamudLibPath>$(AppData)\XIVLauncher\addon\Hooks\dev\</DalamudLibPath>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(IsCI)' == 'True'">
+    <Dalamud>$(HOME)/dalamud</Dalamud>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="DalamudPackager" Version="2.1.11" />
+    <Reference Include="Dalamud">
+      <HintPath>$(DalamudLibPath)Dalamud.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Lumina">
+      <HintPath>$(DalamudLibPath)Lumina.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Lumina.Excel">
+      <HintPath>$(DalamudLibPath)Lumina.Excel.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="ImGui.NET">
+      <HintPath>$(DalamudLibPath)ImGui.NET.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="ImGuiScene">
+      <HintPath>$(DalamudLibPath)ImGuiScene.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="FFXIVClientStructs">
+      <HintPath>$(DalamudLibPath)FFXIVClientStructs.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>$(DalamudLibPath)Newtonsoft.Json.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+  </ItemGroup>
+
+  <Target Name="PackagePlugin-Release" AfterTargets="CleanOutDir" Condition=" '$(Configuration)' == 'Release' ">
+    <DalamudPackager ProjectDir="$(ProjectDir)" OutputPath="$(OutputPath)" AssemblyName="$(AssemblyName)" ManifestType="yaml" MakeZip="True" Include="LICENSE;$(AssemblyName).dll;$(AssemblyName).pdb;$(AssemblyName).json" />
+  </Target>
+  <Target Name="PackagePlugin-Debug" AfterTargets="CleanOutDir" Condition=" '$(Configuration)' == 'Debug' ">
+    <DalamudPackager ProjectDir="$(ProjectDir)" OutputPath="$(OutputPath)" AssemblyName="$(AssemblyName)" ManifestType="yaml" MakeZip="False" />
+  </Target>
+
+  <ItemGroup Condition=" '$(Configuration)' == 'Release' ">
+    <Content Include="$(ProjectDir)$(MSBuildProjectName).yaml" CopyToOutputDirectory="Never" />
+    <None Remove="$(ProjectDir)$(MSBuildProjectName)2.yaml" />
+  </ItemGroup>
+
+  <ItemGroup Condition=" '$(Configuration)' == 'Debug' ">
+    <None Remove="$(ProjectDir)$(MSBuildProjectName).yaml" />
+    <Content Include="$(ProjectDir)$(MSBuildProjectName)2.yaml" CopyToOutputDirectory="Never" />
+  </ItemGroup>
+
+  <ItemGroup Condition="Exists('$(AppData)\MSRuleSets\sonarlint.editorconfig')">
+    <None Include="$(AppData)\MSRuleSets\sonarlint.editorconfig" Link="sonarlint.editorconfig" />
+    <EditorConfigFiles Remove="$(AppData)\MSRuleSets\sonarlint.editorconfig" />
+  </ItemGroup>
+
+  <ItemGroup Condition="Exists('$(AppData)\MSRuleSets\roslynator.editorconfig')">
+    <None Include="$(AppData)\MSRuleSets\roslynator.editorconfig" Link="roslynator.editorconfig" />
+    <EditorConfigFiles Remove="$(AppData)\MSRuleSets\roslynator.editorconfig" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="$(ProjectDir)bin\**" />
+    <Compile Remove="$(ProjectDir)bin\**" />
+    <Content Include="$(SolutionDir)README.md" CopyToOutputDirectory="Never" />
+    <Content Include="$(SolutionDir).gitignore" CopyToOutputDirectory="Never" />
+    <EditorConfigFiles Remove="$(SolutionDir).editorconfig" />
+    <None Include="$(SolutionDir).editorconfig" Link=".editorconfig" />
+  </ItemGroup>
+
+  <Target Name="CleanOutDir" AfterTargets="Build">
+    <ItemGroup>
+      <DeleteAssemblies Include="$(TargetDir)$(AssemblyName).deps.json" />
+    </ItemGroup>
+    <Message Text="Deleting @(DeleteAssemblies)" Importance="high" />
+    <Delete Files="@(DeleteAssemblies)" />
+    <RemoveDir Directories="$(TargetDir)ref\" />
+  </Target>
+</Project>
