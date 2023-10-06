@@ -7,6 +7,5 @@ repo_url: https://github.com/thakyZ/HeliosphereFix
 applicable_version: any
 tags:
   - Utility
-dalamud_api_level: 8
 icon_url: https://raw.githubusercontent.com/thakyZ/MyDalamudPlugins/main/plugins/HeliosphereFix/images/icon.png
 changelog: Initial release

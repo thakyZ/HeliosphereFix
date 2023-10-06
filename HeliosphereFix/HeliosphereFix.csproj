@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <Company></Company>
     <Authors>Neko Boi Nick</Authors>
@@ -36,7 +36,7 @@
 
   <PropertyGroup Label="Feature">
     <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
-    <Version>1.0.0.4</Version>
+    <Version>1.0.0.5</Version>
   </PropertyGroup>
 
   <PropertyGroup>
@@ -61,8 +61,8 @@
   <PropertyGroup Condition="'$(Configuration)'=='Debug'">
     <AssemblyName>$(MSBuildProjectName)2</AssemblyName>
     <Optimize>False</Optimize>
-    <OutputPath>$(AppData)\XIVLauncher\devPlugins\$(MSBuildProjectName)\</OutputPath>
-    <BaseOutputPath>$(AppData)\XIVLauncher\devPlugins\$(MSBuildProjectName)\</BaseOutputPath>
+    <OutputPath>$(DalamudDevPlugins)\$(MSBuildProjectName)\</OutputPath>
+    <BaseOutputPath>$(DalamudDevPlugins)\$(MSBuildProjectName)\</BaseOutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -79,7 +79,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="DalamudPackager" Version="2.1.11" />
+    <PackageReference Include="DalamudPackager" Version="2.1.12" />
     <Reference Include="Dalamud">
       <HintPath>$(DalamudLibPath)Dalamud.dll</HintPath>
       <Private>False</Private>

@@ -8,12 +8,9 @@ using Dalamud.Plugin;
 namespace HeliosphereFix;
 
 internal class GameFont : IDisposable {
-  private DalamudPluginInterface Interface { get; }
   private readonly Dictionary<(uint, bool), GameFontHandle> _fonts = new();
 
-  internal GameFont(DalamudPluginInterface _interface) {
-    this.Interface = _interface;
-  }
+  internal GameFont() {}
 
   public void Dispose() {
     Dispose(true);
@@ -37,19 +34,19 @@ internal class GameFont : IDisposable {
         try {
           GameFontHandle handle;
           if (!this._fonts.ContainsKey((size, italic))) {
-            handle = this.Interface.UiBuilder.GetGameFontHandle(new GameFontStyle(GameFontFamily.Axis, size) {
+            handle = Plugin.Interface.UiBuilder.GetGameFontHandle(new GameFontStyle(GameFontFamily.Axis, size) {
               Italic = italic,
             });
             this._fonts[(size, italic)] = handle;
           }
         } catch (Exception exception) {
           // Catch for whatever reason is also probably unnecessary.
-          PluginLog.Error(exception, "Failed to add font: ({0}, {1})", size, italic);
+          Plugin.PluginLog.Error(exception, "Failed to add font: ({0}, {1})", size, italic);
         }
       }
       // Fallback font (probably unnecessary).
       if (!this._fonts.ContainsKey((12, false))) {
-        GameFontHandle handle = this.Interface.UiBuilder.GetGameFontHandle(new GameFontStyle(GameFontFamilyAndSize.Axis12) {
+        GameFontHandle handle = Plugin.Interface.UiBuilder.GetGameFontHandle(new GameFontStyle(GameFontFamilyAndSize.Axis12) {
           Italic = false,
         });
         this._fonts[(12, false)] = handle;
@@ -59,14 +56,14 @@ internal class GameFont : IDisposable {
         //
         // Though unlike the previous of the above statements,
         // If the fallback is unnecessary then this is too.
-        GameFontHandle handle = this.Interface.UiBuilder.GetGameFontHandle(new GameFontStyle(GameFontFamily.Axis, 12) {
+        GameFontHandle handle = Plugin.Interface.UiBuilder.GetGameFontHandle(new GameFontStyle(GameFontFamily.Axis, 12) {
           Italic = false,
         });
         this._fonts[(12, false)] = handle;
       }
     } catch (Exception exception) {
       // Catch for whatever reason is also probably unnecessary.
-      PluginLog.Error(exception, "Failed to add fonts.");
+      Plugin.PluginLog.Error(exception, "Failed to add fonts.");
     }
 
     return true;
